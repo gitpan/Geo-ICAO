@@ -11,11 +11,13 @@ package Geo::ICAO;
 use warnings;
 use strict;
 
+our $VERSION = '0.11';
+
 # exporting.
 use base qw[ Exporter ];
 our (@EXPORT_OK, %EXPORT_TAGS);
 {
-    my @regions = qw[ all_region_codes all_region_names ];
+    my @regions = qw[ all_region_codes all_region_names region2code code2region ];
     @EXPORT_OK = (@regions);
     %EXPORT_TAGS = (
         region => \@regions,
@@ -24,8 +26,10 @@ our (@EXPORT_OK, %EXPORT_TAGS);
 }
 
 
-our $VERSION = '0.10';
+#--
+# private module vars.
 
+# list of ICAO codes for the regions with their name.
 my %code2region = (
     A => 'Western South Pacific',
     B => 'Iceland/Greenland',
@@ -46,12 +50,12 @@ my %code2region = (
     T => 'Caribbean',
     U => 'Russia and former Soviet States',
     V => 'South Asia and mainland Southeast Asia',
-    W => 'Maritime Southeast Asia (except the Philippines)',
+    W => 'Maritime Southeast Asia',
     Y => 'Australia',
     Z => 'China, Mongolia and North Korea',
 );
 
-
+# list of ICAO codes for the countries with their name.
 my %code2country = (
     'AG' => q{Solomon Islands},
     'AN' => q{Nauru},
@@ -289,15 +293,21 @@ my %code2country = (
     'ZM' => q{Mongolia},
 );
 
-#
+# compute list of region names with their ICAO code.
 my %region2code = reverse %code2region;
 
 
 #--
-#
+# subs handling regions.
 
-sub all_region_codes { return keys   %code2region; }
-sub all_region_names { return values %code2region; }
+sub all_region_codes { return keys %code2region; }
+sub all_region_names { return keys %region2code; }
+sub region2code { return $region2code{$_[0]}; }
+sub code2region {
+    my ($code) = @_;
+    my $letter = substr $code, 0, 1; # can be called with an airport code
+    return $region2code{$letter};
+}
 
 
 1;
@@ -351,6 +361,22 @@ parameters needed.
 =item . all_region_names( )
 
 Return the list of all ICAO region names. No parameters needed.
+
+
+=item . my $code = region2code( $region )
+
+Return the one-letter ICAO C<$code> corresponding to C<$region>. If the
+region does not exist, return undef.
+
+
+=item . my $region = code2region( $code )
+
+Return the ICAO C<$region> corresponding to C<$code>. Note that C<$code>
+can be a one-letter code (region), two-letters code (country) or a
+four-letters code (airport): in either case, the region will be
+returned.
+
+Return undef if the associated region doesn't exist.
 
 =back
 
