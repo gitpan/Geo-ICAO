@@ -11,24 +11,27 @@ package Geo::ICAO;
 use warnings;
 use strict;
 
-our $VERSION = '0.12';
+our $VERSION = '0.20';
 
 # exporting.
 use base qw[ Exporter ];
 our (@EXPORT_OK, %EXPORT_TAGS);
 {
     my @regions   = qw[ all_region_codes all_region_names region2code code2region ];
-    my @countries = qw[ ];
-    @EXPORT_OK = (@regions);
+    my @countries = qw[ all_country_codes all_country_names ];
+    @EXPORT_OK = (@regions, @countries);
     %EXPORT_TAGS = (
-        region => \@regions,
-        all => [ @regions ],
+        region  => \@regions,
+        country => \@countries,
+        all     => \@EXPORT_OK,
     );
 }
 
 
 #--
 # private module vars.
+
+# - vars defined statically
 
 # list of ICAO codes for the regions with their name.
 my %code2region = (
@@ -137,7 +140,7 @@ my %code2country = (
     'HS' => q{Sudan},
     'HT' => q{Tanzania},
     'HU' => q{Uganda},
-    'K'  => q{Mainland United States of America},
+    'K'  => q{USA},
     'LA' => q{Albania},
     'LB' => q{Bulgaria},
     'LC' => q{Cyprus},
@@ -294,8 +297,16 @@ my %code2country = (
     'ZM' => q{Mongolia},
 );
 
-# compute list of region names with their ICAO code.
+# - vars computed after other vars
+
 my %region2code = reverse %code2region;
+my %country2code;
+{ # need to loop, since some countries have more than one code.
+    foreach my $code ( keys %code2country ) {
+        my $country = $code2country{$code};
+        push @{ $country2code{$country} }, $code;
+    }
+}
 
 
 #--
@@ -314,6 +325,8 @@ sub code2region {
 #--
 # subs handling countries.
 
+sub all_country_codes { return keys %code2country; }
+sub all_country_names { return keys %country2code; }
 
 
 1;
@@ -333,6 +346,9 @@ Geo::ICAO - Airport and ICAO codes lookup
     my @region_names = all_region_names();
     my $code   = region2code('Canada');
     my $region = code2region('K');
+
+    my @country_codes = all_country_codes();
+    my @country_names = all_country_names();
 
 
 
@@ -365,7 +381,7 @@ Return the list of all single letters defining an ICAO region. No
 parameter needed.
 
 
-=item . my regions = all_region_names()
+=item . my @regions = all_region_names()
 
 Return the list of all ICAO region names. No parameter needed.
 
@@ -402,6 +418,19 @@ countries.
 Note: you can import all those functions with the C<:country> keyword.
 
 
+=over 4
+
+=item . my @codes = all_country_codes()
+
+Return the list of all single- or double-letters defining an ICAO
+country. No parameter needed.
+
+
+=item . my @countries = all_country_names()
+
+Return the list of all ICAO country names. No parameter needed.
+
+=back
 
 
 
