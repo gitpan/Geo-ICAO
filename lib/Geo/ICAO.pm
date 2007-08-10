@@ -11,13 +11,14 @@ package Geo::ICAO;
 use warnings;
 use strict;
 
-our $VERSION = '0.11';
+our $VERSION = '0.12';
 
 # exporting.
 use base qw[ Exporter ];
 our (@EXPORT_OK, %EXPORT_TAGS);
 {
-    my @regions = qw[ all_region_codes all_region_names region2code code2region ];
+    my @regions   = qw[ all_region_codes all_region_names region2code code2region ];
+    my @countries = qw[ ];
     @EXPORT_OK = (@regions);
     %EXPORT_TAGS = (
         region => \@regions,
@@ -306,8 +307,13 @@ sub region2code { return $region2code{$_[0]}; }
 sub code2region {
     my ($code) = @_;
     my $letter = substr $code, 0, 1; # can be called with an airport code
-    return $region2code{$letter};
+    return $code2region{$letter};
 }
+
+
+#--
+# subs handling countries.
+
 
 
 1;
@@ -321,11 +327,12 @@ Geo::ICAO - Airport and ICAO codes lookup
 
 =head1 SYNOPSIS
 
-    use Geo::ICAO;
-    ...
+    use Geo::ICAO qw[ :all ];
 
     my @region_codes = all_region_codes();
     my @region_names = all_region_names();
+    my $code   = region2code('Canada');
+    my $region = code2region('K');
 
 
 
@@ -352,15 +359,15 @@ Note: you can import all those functions with the C<:region> keyword.
 
 =over 4
 
-=item . all_region_codes( )
+=item . my @codes = all_region_codes()
 
 Return the list of all single letters defining an ICAO region. No
-parameters needed.
+parameter needed.
 
 
-=item . all_region_names( )
+=item . my regions = all_region_names()
 
-Return the list of all ICAO region names. No parameters needed.
+Return the list of all ICAO region names. No parameter needed.
 
 
 =item . my $code = region2code( $region )
@@ -379,6 +386,22 @@ returned.
 Return undef if the associated region doesn't exist.
 
 =back
+
+
+
+=head2 Countries
+
+The first two letters of an ICAO code refer to the country of the
+airport. Once again, the rules are not really set in stone: some codes
+are shared by more than one country, some countries are defined more
+than once... and some countries (Canada, USA, Russia, Australia and
+China) are even coded on only one letter - ie, the country is the same
+as the region). This set of functions allow retrieval and digging of the
+countries.
+
+Note: you can import all those functions with the C<:country> keyword.
+
+
 
 
 
