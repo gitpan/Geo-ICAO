@@ -11,11 +11,22 @@ package Geo::ICAO;
 use warnings;
 use strict;
 
-use Readonly;
+# exporting.
+use base qw[ Exporter ];
+our (@EXPORT_OK, %EXPORT_TAGS);
+{
+    my @regions = qw[ all_region_codes all_region_names ];
+    @EXPORT_OK = (@regions);
+    %EXPORT_TAGS = (
+        region => \@regions,
+        all => [ @regions ],
+    );
+}
 
-our $VERSION = '0.02';
 
-Readonly my %CODE2REGION => (
+our $VERSION = '0.10';
+
+my %code2region = (
     A => 'Western South Pacific',
     B => 'Iceland/Greenland',
     C => 'Canada',
@@ -41,7 +52,7 @@ Readonly my %CODE2REGION => (
 );
 
 
-Readonly my %CODE2COUNTRY => (
+my %code2country = (
     'AG' => q{Solomon Islands},
     'AN' => q{Nauru},
     'AY' => q{Papua New Guinea},
@@ -279,14 +290,14 @@ Readonly my %CODE2COUNTRY => (
 );
 
 #
-Readonly my %REGION2CODE  => reverse %CODE2REGION;
+my %region2code = reverse %code2region;
 
 
 #--
 #
 
-sub all_region_codes { return keys   %CODE2REGION; }
-sub all_region_names { return values %CODE2REGION; }
+sub all_region_codes { return keys   %code2region; }
+sub all_region_names { return values %code2region; }
 
 
 1;
@@ -310,7 +321,11 @@ Geo::ICAO - Airport and ICAO codes lookup
 
 =head1 EXPORT
 
-Nothing yet.
+Nothing is exported by default. But all the functions described below
+are exportable: it's up to you to decide what you want to import.
+
+Note that the keyword C<:all> will import everything, and each category
+of function provides its own keyword.
 
 
 
@@ -321,6 +336,8 @@ Nothing yet.
 The first letter of an ICAO code refer to the region of the airport. The
 region is quite loosely defined as per the ICAO. This set of functions
 allow retrieval and digging of the regions.
+
+Note: you can import all those functions with the C<:region> keyword.
 
 
 =over 4
