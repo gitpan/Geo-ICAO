@@ -11,7 +11,10 @@ package Geo::ICAO;
 use warnings;
 use strict;
 
-our $VERSION = '0.20';
+use Carp;
+use List::Util qw[ first ];
+
+our $VERSION = '0.21';
 
 # exporting.
 use base qw[ Exporter ];
@@ -325,8 +328,24 @@ sub code2region {
 #--
 # subs handling countries.
 
-sub all_country_codes { return keys %code2country; }
-sub all_country_names { return keys %country2code; }
+sub all_country_codes {
+    my ($code) = @_;
+
+    return keys %code2country unless defined $code; # no filters
+    croak "'$code' is not a valid region code" unless defined code2region($code);
+    return grep { /^$code/ } keys %code2country;    # filtering
+}
+sub all_country_names {
+    my ($code) = @_;
+
+    return keys %country2code unless defined $code; # no filters
+    croak "'$code' is not a valid region code" unless defined code2region($code);
+
+    # %country2code holds array refs. but even if a country has more
+    # than one code assigned, they will be in the same region: we just
+    # need to test the first code.
+    return grep { $country2code{$_}[0] =~ /^$code/ } keys %country2code;
+}
 
 
 1;
@@ -420,15 +439,18 @@ Note: you can import all those functions with the C<:country> keyword.
 
 =over 4
 
-=item . my @codes = all_country_codes()
+=item . my @codes = all_country_codes( [$code] )
 
 Return the list of all single- or double-letters defining an ICAO
-country. No parameter needed.
+country. If a region C<$code> is given, return only the country codes of
+this region. (Note: dies if C<$code> isn't a valid ICAO region code).
 
 
-=item . my @countries = all_country_names()
+=item . my @countries = all_country_names( [$code] )
 
-Return the list of all ICAO country names. No parameter needed.
+Return the list of all ICAO country names. If a region C<$code> is
+given, return only the country names of this region. (Note: dies if
+C<$code> isn't a valid ICAO region code).
 
 =back
 
