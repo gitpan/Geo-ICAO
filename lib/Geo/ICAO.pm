@@ -14,14 +14,14 @@ use strict;
 use Carp;
 use List::Util qw[ first ];
 
-our $VERSION = '0.21';
+our $VERSION = '0.22';
 
 # exporting.
 use base qw[ Exporter ];
 our (@EXPORT_OK, %EXPORT_TAGS);
 {
     my @regions   = qw[ all_region_codes all_region_names region2code code2region ];
-    my @countries = qw[ all_country_codes all_country_names ];
+    my @countries = qw[ all_country_codes all_country_names country2code code2country ];
     @EXPORT_OK = (@regions, @countries);
     %EXPORT_TAGS = (
         region  => \@regions,
@@ -335,6 +335,7 @@ sub all_country_codes {
     croak "'$code' is not a valid region code" unless defined code2region($code);
     return grep { /^$code/ } keys %code2country;    # filtering
 }
+
 sub all_country_names {
     my ($code) = @_;
 
@@ -345,6 +346,19 @@ sub all_country_names {
     # than one code assigned, they will be in the same region: we just
     # need to test the first code.
     return grep { $country2code{$_}[0] =~ /^$code/ } keys %country2code;
+}
+
+sub country2code {
+    my ($country) = @_;
+    my $codes = $country2code{$country};
+    return defined $codes ? @$codes : undef;
+}
+
+sub code2country {
+    my ($code) = @_;
+    return $code2country{$code}
+        || $code2country{substr($code,0,2)}
+        || $code2country{substr($code,0,1)};
 }
 
 
@@ -451,6 +465,22 @@ this region. (Note: dies if C<$code> isn't a valid ICAO region code).
 Return the list of all ICAO country names. If a region C<$code> is
 given, return only the country names of this region. (Note: dies if
 C<$code> isn't a valid ICAO region code).
+
+
+=item . my @codes = country2code( $country )
+
+Return the list of ICAO codes corresponding to C<$country>. It's a list
+since some countries have more than one code. Note that the codes can be
+single-letters (USA, etc.)
+
+
+=item . my $country = code2country( $code )
+
+Return the ICAO C<$country> corresponding to C<$code>. Note that
+C<$code> can be a classic country code, or a four-letters code
+(airport): in either case, the region will be returned.
+
+Return undef if the associated region doesn't exist.
 
 =back
 
