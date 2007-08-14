@@ -14,7 +14,7 @@ use strict;
 use Carp;
 use List::Util qw[ first ];
 
-our $VERSION = '0.31';
+our $VERSION = '0.32';
 
 # exporting.
 use base qw[ Exporter ];
@@ -22,7 +22,7 @@ our (@EXPORT_OK, %EXPORT_TAGS);
 {
     my @regions   = qw[ all_region_codes all_region_names region2code code2region ];
     my @countries = qw[ all_country_codes all_country_names country2code code2country ];
-    my @airports  = qw[ airport2code code2airport ];
+    my @airports  = qw[ all_airport_codes airport2code code2airport ];
     @EXPORT_OK = (@regions, @countries, @airports);
     %EXPORT_TAGS = (
         region  => \@regions,
@@ -367,6 +367,25 @@ sub code2country {
 #--
 # subs handling airports
 
+sub all_airport_codes {
+    my ($code) = @_;
+
+    croak 'should provid a region or country code' unless defined $code;
+    croak "'$code' is not a valid region or country code"
+        unless exists $code2country{$code}
+            || exists $code2region{$code};
+
+    seek DATA, 0, 0; # reset data iterator
+    my @codes;
+    LINE:
+    while ( my $line = <DATA>) {
+        next LINE unless $line =~ /^$code/;  # filtering on $code
+        my ($c, undef) = split/\|/, $line;
+        push @codes, $c;
+    }
+    return @codes;
+}
+
 sub airport2code {
     my ($name) = @_;
 
@@ -418,6 +437,7 @@ Geo::ICAO - Airport and ICAO codes lookup
     my @codes   = country2code('Brazil');
     my $region  = code2country('SB');
 
+    my @airport_codes = all_airport_codes('K');
     my $code    = airport2code('Lyon Bron Airport');
     my $airport = code2airport('LFLY');
     my ($airport, $location) = code2airport('LFLY'); # list context
@@ -534,6 +554,15 @@ Note: you can import all those functions with the C<:airport> keyword.
 
 
 =over 4
+
+=item . my @codes = all_airport_codes( $code )
+
+Return the list of all ICAO airport codes in the C<$code> country
+(C<$code> can also be a region code). Note that compared to the region
+or country equivalent, this function B<requires> an argument. It will
+die otherwise (or if C<$code> isn't a valid ICAO country or region
+code).
+
 
 =item . my $code = airport2code( $airport )
 
