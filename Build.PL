@@ -1,38 +1,30 @@
-#!perl
-#
-# This file is part of Geo::ICAO.
-# Copyright (c) 2007 Jerome Quelin, all rights reserved.
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the same terms as Perl itself.
-#
-#
 
 use strict;
 use warnings;
+
 use Module::Build;
 
-my $builder = Module::Build->new (
-    module_name         => 'Geo::ICAO',
-    dist_author         => 'Jerome Quelin <jquelin@cpan.org>',
-    license             => 'perl',
-    dist_version_from   => 'lib/Geo/ICAO.pm',
-    add_to_cleanup => [
-        'Geo-ICAO-*', 'MANIFEST.bak',
-        map { ( '*/' x $_ ) . '*~' } 0..4 ],
-    script_files   => [ ],
-    build_requires => {
-        'Test::More' => 0,
-        'perl'       => '5.008',
-    },
-    requires       => { 
-        'perl'       => '5.008',
-    },
-    recommends     => {
-        'Test::Kwalitee'      => 0,
-        'Test::Pod'           => 0,
-        'Test::Pod::Coverage' => 0,
-    },
+my $build = Module::Build->new(
+  module_name   => 'Geo::ICAO',
+  license       => 'perl',
+  dist_abstract => "Airport\ and\ ICAO\ codes\ lookup",
+  dist_name     => "Geo\-ICAO",
+  dist_author   => [
+"Jerome\ Quelin",
+  ],
+  requires      => {
+    "base" => '0',
+    "English" => '0',
+    "charnames" => '0',
+    "ExtUtils::MakeMaker" => '0',
+    "Readonly" => '0',
+    "Encode" => '0',
+    "Carp" => '0',
+    "Test::More" => '0',
+    "List::Util" => '0',
+    "File::Find" => '0',
+  },
+  script_files => [ qw() ],
 );
 
-$builder->create_build_script();
+$build->create_build_script;

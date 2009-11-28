@@ -1,18 +1,7 @@
-# 
-# This file is part of Geo-ICAO
-# 
-# This software is copyright (c) 2007 by Jerome Quelin.
-# 
-# This is free software; you can redistribute it and/or modify it under
-# the same terms as the Perl 5 programming language system itself.
-# 
 use warnings;
 use strict;
 
 package Geo::ICAO;
-our $VERSION = '1.093320';
-
-
 # ABSTRACT: Airport and ICAO codes lookup
 
 use Carp;
@@ -442,19 +431,6 @@ sub code2airport {
 #__END__
 
 
-
-
-
-=pod
-
-=head1 NAME
-
-Geo::ICAO - Airport and ICAO codes lookup
-
-=head1 VERSION
-
-version 1.093320
-
 =head1 SYNOPSIS
 
     use Geo::ICAO qw[ :all ];
@@ -475,6 +451,8 @@ version 1.093320
     my $airport = code2airport('LFLY');
     my ($airport, $location) = code2airport('LFLY'); # list context
 
+
+
 =head1 EXPORT
 
 Nothing is exported by default. But all the functions described below
@@ -482,6 +460,8 @@ are exportable: it's up to you to decide what you want to import.
 
 Note that the keyword C<:all> will import everything, and each category
 of function provides its own keyword.
+
+
 
 =head1 FUNCTIONS
 
@@ -493,6 +473,7 @@ allow retrieval and digging of the regions.
 
 Note: you can import all those functions with the C<:region> keyword.
 
+
 =over 4
 
 =item . my @codes = all_region_codes()
@@ -500,14 +481,17 @@ Note: you can import all those functions with the C<:region> keyword.
 Return the list of all single letters defining an ICAO region. No
 parameter needed.
 
+
 =item . my @regions = all_region_names()
 
 Return the list of all ICAO region names. No parameter needed.
+
 
 =item . my $code = region2code( $region )
 
 Return the one-letter ICAO C<$code> corresponding to C<$region>. If the
 region does not exist, return undef.
+
 
 =item . my $region = code2region( $code )
 
@@ -519,6 +503,8 @@ returned.
 Return undef if the associated region doesn't exist.
 
 =back
+
+
 
 =head2 Countries
 
@@ -532,6 +518,7 @@ countries.
 
 Note: you can import all those functions with the C<:country> keyword.
 
+
 =over 4
 
 =item . my @codes = all_country_codes( [$code] )
@@ -540,17 +527,20 @@ Return the list of all single- or double-letters defining an ICAO
 country. If a region C<$code> is given, return only the country codes of
 this region. (Note: dies if C<$code> isn't a valid ICAO region code).
 
+
 =item . my @countries = all_country_names( [$code] )
 
 Return the list of all ICAO country names. If a region C<$code> is
 given, return only the country names of this region. (Note: dies if
 C<$code> isn't a valid ICAO region code).
 
+
 =item . my @codes = country2code( $country )
 
 Return the list of ICAO codes corresponding to C<$country>. It's a list
 since some countries have more than one code. Note that the codes can be
 single-letters (USA, etc.)
+
 
 =item . my $country = code2country( $code )
 
@@ -562,12 +552,15 @@ Return undef if the associated region doesn't exist.
 
 =back
 
+
+
 =head2 Airports
 
 This set of functions allow retrieval and digging of the airports, which
 are defined on 4 letters.
 
 Note: you can import all those functions with the C<:airport> keyword.
+
 
 =over 4
 
@@ -579,6 +572,7 @@ or country equivalent, this function B<requires> an argument. It will
 die otherwise (or if C<$code> isn't a valid ICAO country or region
 code).
 
+
 =item . my @codes = all_airport_names( $code )
 
 Return the list of all ICAO airport names in the C<$code> country
@@ -587,10 +581,12 @@ or country equivalent, this function B<requires> an argument. It will
 die otherwise (or if C<$code> isn't a valid ICAO country or region
 code).
 
+
 =item . my $code = airport2code( $airport )
 
 Return the C<$code> of the C<$airport>, undef i no airport matched. Note
 that the string comparison is done on a case-insensitive basis.
+
 
 =item . my $airport = code2airport( $code )
 
@@ -598,6 +594,8 @@ Return the C<$airport> name corresponding to C<$code>. In list context,
 return both the airport name and its location (if known).
 
 =back
+
+
 
 =head1 SEE ALSO
 
@@ -627,19 +625,7 @@ L<http://cpanratings.perl.org/d/Geo-ICAO>
 
 =back
 
-=head1 AUTHOR
-
-  Jerome Quelin
-
-=head1 COPYRIGHT AND LICENSE
-
-This software is copyright (c) 2007 by Jerome Quelin.
-
-This is free software; you can redistribute it and/or modify it under
-the same terms as the Perl 5 programming language system itself.
-
 =cut
-
 
 __DATA__
 AGAF|Afutara Airport|Afutara
@@ -695,11 +681,10 @@ AYKY|Kunaye Airport|Kunaye
 AYLA|Lae Nadzab Airport|Lae
 AYMD|Madang Airport|Madang
 AYMH|Mount Hagen Airport|Mount Hagen
-AYMM|Misima Airport|Misima
+AYMM / AYMS|Misima Airport|Misima
 AYMN|Mendi Airport|Mendi
 AYMO|Momote Airport|Manus Island
 AYMR|Moro Airport|Moro
-AYMS|Misima Airport|Misima
 AYNZ|Nadzab Airport|Manguna
 AYPY|Port Moresby/Jackson International Airport|Port Moresby
 AYRB|Rabaul Airport|Rabaul
