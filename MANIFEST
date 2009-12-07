@@ -1,5 +1,6 @@
 Build.PL
 Changes
+Changes~
 LICENSE
 MANIFEST
 MANIFEST.SKIP
@@ -8,11 +9,9 @@ Makefile.PL
 README
 dist.ini
 lib/Geo/ICAO.pm
-lib/Geo/ICAO.pm~
 scripts/get-airport_codes
 scripts/get-code2country
 t/00-compile.t
-t/03-kwalitee.t
 t/10-region.t
 t/11-country.t
 t/12-airport.t

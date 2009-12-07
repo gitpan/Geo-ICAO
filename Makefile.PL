@@ -11,7 +11,7 @@ WriteMakefile(
   NAME      => 'Geo::ICAO',
   AUTHOR    => "Jerome\ Quelin",
   ABSTRACT  => "Airport\ and\ ICAO\ codes\ lookup",
-  VERSION   => '1.093320',
+  VERSION   => '1.093410',
   EXE_FILES => [ qw() ],
   (eval { ExtUtils::MakeMaker->VERSION(6.31) } ? (LICENSE => 'perl') : ()),
   PREREQ_PM    => {

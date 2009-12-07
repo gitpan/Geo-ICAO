@@ -10,9 +10,7 @@ use warnings;
 use strict;
 
 package Geo::ICAO;
-our $VERSION = '1.093320';
-
-
+our $VERSION = '1.093410';
 # ABSTRACT: Airport and ICAO codes lookup
 
 use Carp;
@@ -453,7 +451,7 @@ Geo::ICAO - Airport and ICAO codes lookup
 
 =head1 VERSION
 
-version 1.093320
+version 1.093410
 
 =head1 SYNOPSIS
 

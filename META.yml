@@ -6,7 +6,7 @@ build_requires:
   Module::Build: 0.35
 configure_requires:
   Module::Build: 0.35
-generated_by: 'Dist::Zilla version 1.093250'
+generated_by: 'Dist::Zilla version 1.093371'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -15,15 +15,13 @@ name: Geo-ICAO
 provides:
   Geo::ICAO:
     file: lib/Geo/ICAO.pm
-    version: 1.093320
+    version: 1.093410
 requires:
   Carp: 0
   Encode: 0
   English: 0
-  ExtUtils::MakeMaker: 0
   File::Find: 0
   List::Util: 0
-  Module::Build: 0
   Readonly: 0
   Test::More: 0
   base: 0
@@ -31,4 +29,4 @@ requires:
 resources:
   homepage: http://search.cpan.org/dist/Geo-ICAO
   repository: http://github.com/jquelin/geo-icao
-version: 1.093320
+version: 1.093410
